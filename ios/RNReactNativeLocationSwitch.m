@@ -20,8 +20,16 @@ RCT_REMAP_METHOD(enableLocationService,
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
 
     if (![CLLocationManager locationServicesEnabled]) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"App-Prefs:root=Privacy&path=LOCATION"] options:@{}
-                                 completionHandler:^(BOOL success) {}];
+        /*
+         using "App-Prefs:root=Privacy&path=LOCATION" results in app store rejection under
+         Guideline 2.5.1 - Performance - Software Requirements
+         The use of non-public APIs is not permitted on the App Store
+         because it can lead to a poor user experience should these APIs change.
+     */
+        // show location settings
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"App-Prefs:root=Privacy&path=LOCATION"] options:@{}
+//                                 completionHandler:^(BOOL success) {}];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 
     } else if (status == kCLAuthorizationStatusDenied) {
         NSLog(@"Location Services Disabled");
